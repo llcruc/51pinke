@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+		
+	 <!-- 配置登录校验aop -->
+	 <context:component-scan base-package="com.spring.aop,com.action">
+	    <context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>
+	 </context:component-scan>
+	 <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	 
+	 
+	 
+	 <!-- 配置util -->
+    <bean id="md5encrypt" class="com.util.MD5Encrypt"></bean>
+    <bean id="jmail" class="com.util.Jmail"></bean>
+    <bean id="ruccourseget" class="com.util.RucCourseGet"></bean>
+    <bean id="ruccoursegetimg" class="com.util.RucCourseBaiDuGet"></bean>
+    
+    
+    <!-- 配置dao层 -->
+	<!-- 配置用户dao -->
+	<bean id="userdao" class="com.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!-- 配置日志dao -->
+	<bean id="loginlogdao" class="com.dao.impl.User_log_DaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置文件dao -->
+	<bean id="filedao" class="com.dao.impl.FileDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置课程dao -->
+	<bean id="coursedao" class="com.dao.impl.RucCourseDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置用户课表dao -->
+	<bean id="coursetabledao" class="com.dao.impl.CourseTableDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置教师dao -->
+	<bean id="ructeacherdao" class="com.dao.impl.RucTeacherDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置分类dao -->
+	<bean id="categorydao" class="com.dao.impl.CategoryDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置文件评分dao -->
+	<bean id="filescoredao" class="com.dao.impl.FileScoreDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置文件评论dao -->
+	<bean id="filecommentdao" class="com.dao.impl.FileCommentDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 配置下载日志dao -->
+	<bean id="filedownlogdao" class="com.dao.impl.FileDownLogDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 文件收藏dao -->
+	<bean id="filecollectiondao" class="com.dao.impl.FileCollectionDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 教师评论dao -->
+	<bean id="ructeachercommentdao" class="com.dao.impl.RucTeacherCommentDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 课程信息用户提交修改dao -->
+	<bean id="coursecheckdao" class="com.dao.impl.RucCourseCheckDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 教师评分dao -->
+	<bean id="teacherscoredao" class="com.dao.impl.RucTeacherScoreDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+
+    <!-- 配置service层 -->
+	<!-- 配置用户业务操作依赖 -->
+	<bean id="userservice" class="com.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userdao"></property>
+	</bean>
+	<bean id="user_log_service" class="com.service.impl.User_log_ServiceImpl">
+	    <property name="user_log_Dao" ref="loginlogdao"></property>
+	</bean>
+	<!-- 配置文件业务操作依赖 -->
+	<bean id="fileservice" class="com.service.impl.FileServiceImpl">
+	    <property name="fileDao" ref="filedao"></property>
+	</bean>
+	<!-- 配置课程业务操作依赖 -->
+	<bean id="courseservice" class="com.service.impl.RucCourseServiceImpl">
+	    <property name="rucCourseDao" ref="coursedao"></property>
+	</bean>
+	<!-- 配置课表业务操作依赖 -->
+	<bean id="coursetableservice" class="com.service.impl.CourseTableServiceImpl">
+	    <property name="courseTableDao" ref="coursetabledao"></property>
+	</bean>
+	<!-- 配置教师业务操作依赖 -->
+	<bean id="ructeacherservice" class="com.service.impl.RucTeacherServiceImpl">
+	    <property name="rucTeacherDao" ref="ructeacherdao"></property>
+	</bean>
+	<!-- 配置检索业务操作依赖 -->
+	<bean id="searchservice" class="com.service.impl.SearchServiceImpl">
+	    <property name="rucCourseDao" ref="coursedao"></property>
+	    <property name="rucTeacherDao" ref="ructeacherdao"></property>
+	    <property name="fileDao" ref="filedao"></property>
+	</bean>
+	<!-- 配置文件类别服务 -->
+	<bean id="categoryservice" class="com.service.impl.CategoryServiceImpl">
+	    <property name="categoryDao" ref="categorydao"></property>
+	</bean>
+	<!-- 配置文件评分服务 -->
+	<bean id="filescoreservice" class="com.service.impl.FileScoreServiceImpl">
+	    <property name="fileScoreDao" ref="filescoredao"></property>
+	</bean>
+	<!-- 配置文件评分服务 -->
+	<bean id="filecommentservice" class="com.service.impl.FileCommentServiceImpl">
+	    <property name="fileCommentDao" ref="filecommentdao"></property>
+	</bean>
+	<!-- 配置文件下载日志服务 -->
+	<bean id="filedownlogservice" class="com.service.impl.FileDownLogServiceImpl">
+	    <property name="fileDownLogDao" ref="filedownlogdao"></property>
+	</bean>
+	<!-- 文件收藏服务 -->
+	<bean id="filecollectionservice" class="com.service.impl.FileCollectionServiceImpl">
+	    <property name="fileCollectionDao" ref="filecollectiondao"></property>
+	</bean>
+	<!-- 教师评论服务 -->
+	<bean id="ructeachercommentservice" class="com.service.impl.RucTeacherCommentServiceImpl">
+	    <property name="rucTeacherCommentDao" ref="ructeachercommentdao"></property>
+	</bean>
+	<!-- 用户提交课程修改服务 -->
+	<bean id="coursecheckservice" class="com.service.impl.RucCourseCheckServiceImpl">
+	    <property name="rucCourseCheckDao" ref="coursecheckdao"></property>
+	</bean>
+	<!-- 教师评分service层 -->
+	<bean id="teacherscoreservice" class="com.service.impl.RucTeacherScoreServiceImpl">
+	    <property name="rucTeacherScoreDao" ref="teacherscoredao"></property>
+	</bean>
+	
+	
+	<!-- 配置Action依赖 -->
+	<!-- 配置用户action的操作 -->
+	<bean id="useraction" class="com.action.UserAction" scope="prototype">
+		<property name="userService" ref="userservice"></property>
+		<property name="user_log_Service" ref="user_log_service"></property>
+		<property name="fileService" ref="fileservice"></property>
+	</bean>
+	<!-- 配置文件action操作 -->
+	<bean id="fileaction" class="com.action.FileAction" scope="prototype">
+	    <property name="rowsperpage" value="10"></property>
+	    <property name="fileService" ref="fileservice"></property>
+	    <property name="categoryService" ref="categoryservice"></property>
+	    <property name="userService" ref="userservice"></property>
+	    <property name="fileScoreService" ref="filescoreservice"></property>
+	    <property name="fileCommentService" ref="filecommentservice"></property>
+	    <property name="fileDownLogService" ref="filedownlogservice"></property>
+	    <property name="fileCollectionService" ref="filecollectionservice"></property>
+	</bean>
+	<!-- 配置网页跳转action操作 -->
+	<bean id="dispatchaction" class="com.action.DispatchAction" scope="prototype">
+	    <property name="courseTableService" ref="coursetableservice"></property>
+	    <property name="userService" ref="userservice"></property>
+	    <property name="fileService" ref="fileservice"></property>
+	    <property name="fileDownLogService" ref="filedownlogservice"></property>
+	</bean>
+	<!-- 课程网页跳转action -->
+	
+	<!-- 配置课程操作action -->
+	<bean id="courseaction" class="com.action.CourseAction" scope="prototype">
+	    <property name="rucCourseService" ref="courseservice"></property>
+	    <property name="courseTableService" ref="coursetableservice"></property>
+	    <property name="rucCourseGet" ref="ruccourseget"></property>
+	    <property name="rucTeacherService" ref="ructeacherservice"></property>
+	    <property name="rucCourseCheckService" ref="coursecheckservice"></property>
+	</bean>
+	
+	<!-- 主页各种菜单 -->
+	<bean id="mainaction" class="com.action.MainAction" scope="prototype">
+	    <property name="rucCourseService" ref="courseservice"></property>
+	    <property name="fileService" ref="fileservice"></property>
+	    <property name="fileDownLogService" ref="filedownlogservice"></property>
+	    <property name="fileCollectionService" ref="filecollectionservice"></property>
+	    <property name="userService" ref="userservice"></property>
+	    <property name="rucTeacherService" ref="ructeacherservice"></property>
+	</bean>
+	
+	<!-- 搜索action -->
+	<bean id="searchaction" class="com.action.SearchAction" scope="prototype">
+	    <property name="searchService" ref="searchservice"></property>
+	    <property name="rowsperpage" value="10"></property>
+	    <property name="rucTeacherService" ref="ructeacherservice"></property>
+	</bean>
+	
+	<!-- 教师action -->
+	<bean id="teacheraction" class="com.action.TeacherAction" scope="prototype">
+	    <property name="rucCourseService" ref="courseservice"></property>
+	    <property name="rucTeacherService" ref="ructeacherservice"></property>
+	    <property name="rucTeacherScoreService" ref="teacherscoreservice"></property>
+	</bean>
+	
+
+	<!-- 配置hibernate注入 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/51pinke"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="111111"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.current_session_context_class">
+					thread
+				</prop>
+				<prop key="javax.persistence.validation.mode">none</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+
+		</property>
+		<property name="packagesToScan">
+           <list>
+              <value>com.spring.entity</value>
+           </list>
+       </property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+		   <ref bean="sessionFactory"></ref>
+		</property>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+
+
+</beans>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+    <!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+    <constant name="struts.devMode" value="true" />
+    <!-- 默认的视图主题 -->
+    <constant name="struts.ui.theme" value="simple" />
+    <!-- 解决乱码    -->
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <!-- 设置struts2默认的objectFactory设置为spring -->
+    <constant name="struts.objectFactory" value="spring" />
+    <!-- 设置上传文件大小限制 -->
+    <constant name="struts.multipart.maxSize" value="104857600"/>
+    
+    <package name="default" namespace="/"  extends="struts-default">
+        <!-- <action name="helloworld" class="helloworldbean">
+            <result name="success">/success.jsp</result>
+        </action> -->
+        
+        <!-- 全局返回值 -->
+        <global-results>
+            <result name="error">/WEB-INF/jsp/404.jsp</result>
+            <result name="checklogin">/WEB-INF/jsp/user/login/loginpage.jsp</result>
+        </global-results>
+        
+        <global-exception-mappings>  
+            <exception-mapping result="checklogin" exception="java.lang.reflect.UndeclaredThrowableException">  
+            </exception-mapping>
+       </global-exception-mappings>
+        
+        
+        <!-- 配置网页跳转 -->
+        <action name="page" class="dispatchaction">
+            <result name="upload">/WEB-INF/jsp/file/upload.jsp</result>
+            <result name="user">/WEB-INF/jsp/user/user.jsp</result>
+            <result name="userinfo">/WEB-INF/jsp/user/userinfo.jsp</result>
+            <result name="editeicon">/WEB-INF/jsp/user/changeicon.jsp</result>
+            <result name="editeuserinfo">/WEB-INF/jsp/user/editeinfo.jsp</result>
+            <result name="userfile">/WEB-INF/jsp/user/userfile.jsp</result>
+            <result name="usercourse">/WEB-INF/jsp/user/usercourse.jsp</result>
+            <result name="usercoursetable" type="redirectAction">coursetable</result>
+            <result name="collect">/WEB-INF/jsp/user/collection.jsp</result>
+            <result name="mydownload">/WEB-INF/jsp/user/mydownload.jsp</result>
+            <result name="usercredit">/WEB-INF/jsp/user/usercredit.jsp</result>
+            <result name="ruccourse">/WEB-INF/jsp/course/course.jsp</result>
+            <result name="login">/WEB-INF/jsp/user/login/login.jsp</result>
+            <result name="logined">/WEB-INF/jsp/user/login/loginsuccess.jsp</result>
+            <result name="filenum">/WEB-INF/jsp/file/filenum.jsp</result>
+            <result name="registe">/WEB-INF/jsp/other/registe.jsp</result>
+            <result name="editefile">/WEB-INF/jsp/user/userfile/editefile.jsp</result>
+        </action>
+        <!-- 配置课程页跳转 -->
+        <action name="course" class="courseaction">
+            <result name="courseinfo2">/WEB-INF/jsp/course/courseinfo.jsp</result>
+            <result name="courseinfoedite">/WEB-INF/jsp/course/courseinfoedite.jsp</result>
+            <result name="check">/WEB-INF/jsp/course/courseinfoeditesuccess.jsp</result>
+        </action>
+        
+        
+        
+        <!-- 用户各种操作 -->
+        <action name="user" class="useraction">
+            <result name="userinfopage" type="redirectAction">page!userinfo.action</result>
+            <result name="loginsuccess">/WEB-INF/jsp/user/login/loginsuccess.jsp</result>
+            <result name="login">/WEB-INF/jsp/user/login/login.jsp</result>
+            <result name="loginsuccess2">/index.jsp</result>
+            <result name="login2">/WEB-INF/jsp/user/login/loginpage.jsp</result>
+            <result name="logout">/WEB-INF/jsp/user/login/login.jsp</result>
+            <result name="registe">/WEB-INF/jsp/other/registesuccess.jsp</result>
+        </action>
+        
+        <!-- 验证邮箱是否存在 -->
+        <action name="validatemail" class="useraction" method="validatemail">
+        </action>
+        
+        <!-- 用户修改密码 -->
+        <action name="updatepassword" class="useraction" method="updatepassword">
+            <result name="success">/success.jsp</result>
+        </action>
+        
+        <!-- 用户更新个人信息 -->
+        <action name="updateuserinfo" class="useraction" method="updateuserinfo">
+            <result name="success">/success.jsp</result>
+        </action>
+        
+        <!-- 用户文件上传 -->
+        <action name="upload" class="fileaction" method="uploadfile">
+            <interceptor-ref name="fileUpload">
+                <!-- 文件过滤 -->
+                <!-- <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param> -->
+                <!-- 文件大小, 以字节为单位 -->
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />
+            <result name="input">/WEB-INF/jsp/404.jsp</result>
+            
+        </action>
+        
+        <!-- 文件信息 -->
+        <action name="fileinfo" class="fileaction" method="fileinfo">
+            <result name="success">/WEB-INF/jsp/file/upload2.jsp</result>
+        </action>
+        <action name="file" class="fileaction">
+            <result name="preview">/WEB-INF/jsp/file/preview.jsp</result>
+            <result name="loadcomment">/WEB-INF/jsp/file/filecomment.jsp</result>
+            <result name="flexpaper">/WEB-INF/jsp/file/flexpaper.jsp</result>
+            <result name="down" type="stream">
+               <param name="contentType">application/octet-stream</param>
+               <param name="inputName">inputStream1</param>
+               <param name="contentDisposition">attachment;filename="${downloadname}"</param>
+               <param name="bufferSize">2048</param>
+            </result>
+            <result name="filedelete" type="redirectAction">page!userfile.action</result>
+            <result name="collectiondelete" type="redirectAction">page!collect.action</result>
+            <result name="fileupdated">/WEB-INF/jsp/user/userfile/editesuccess.jsp</result>
+        </action>
+        
+        <!-- 用户上传头像 -->
+        <action name="usericon" class="fileaction" method="uploadicon">
+        </action>
+        
+        <!-- 用户获取课表 -->
+        <action name="coursetable" class="courseaction">
+           <result name="success">/WEB-INF/jsp/user/usercourse3.jsp</result>
+           <result name="coursepage">/WEB-INF/jsp/user/usercourse2.jsp</result>
+           <result name="courseinfo">/WEB-INF/jsp/user/usercourseinfo.jsp</result>
+        </action>
+        
+        <!-- 主页菜单 -->
+        <action name="main" class="mainaction">
+           <result name="maincourse">/WEB-INF/jsp/course/course.jsp</result>
+           <result name="userfilelist">/WEB-INF/jsp/user/userfile/userfilelist.jsp</result>
+           <result name="userfilelist2">/WEB-INF/jsp/user/userfile/userfilelist2.jsp</result>
+           <result name="usercollectlist">/WEB-INF/jsp/user/userfile/usercollectionlist.jsp</result>
+           <result name="usercollectlist2">/WEB-INF/jsp/user/userfile/usercollectionlist2.jsp</result>
+           <result name="downloglist">/WEB-INF/jsp/user/userfile/userdownloglist.jsp</result>
+        </action>
+        
+        <!-- 搜索页面 -->
+        <action name="search" class="searchaction">
+           <result name="result">/WEB-INF/jsp/search/result.jsp</result>
+           <result name="fileresult">/WEB-INF/jsp/search/filesearch.jsp</result>
+           <result name="courseresult">/WEB-INF/jsp/search/coursesearch.jsp</result>
+           <result name="teacherresult">/WEB-INF/jsp/search/teachersearch.jsp</result>
+        </action>
+        
+        <!-- 教师页面 -->
+        <action name="teacher" class="teacheraction">
+           <result name="teacherinfo">/WEB-INF/jsp/teacher/teacherinfo.jsp</result>
+           <result name="teacherinfoedite">/WEB-INF/jsp/teacher/teacherinfoedite.jsp</result>
+        </action>
+    
+    </package>
+
+</struts>    
